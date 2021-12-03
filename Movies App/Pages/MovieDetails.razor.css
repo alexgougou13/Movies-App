@@ -1,0 +1,72 @@
+﻿.page {
+    background-color: #22254b;
+}
+page {
+    background-color: #22254b;
+}
+
+header {
+    font-family: 'Courier New', monospace;
+    font-size: xx-large;
+    text-align:center;
+    background-color:#373b69;
+    color:#fff;
+}
+body {
+    background-color: #22254b;
+    margin: 0;
+    height: 100%;
+}
+.movie img{
+    width:300px
+}
+.movie {
+    background-color: #35094A;
+}
+.movie-info {
+    color: #eee;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 1rem 1rem;
+    letter-spacing: 0.5px;
+}
+
+.movie-info h3 {
+    margin-top: 0;
+}
+
+    .movie-info span {
+        background-color: #22254b;
+        padding: 0.5rem 0.5rem;
+        border-radius: 3px;
+        font-weight: bold;
+        font-size: 28px;
+    }
+.movie-info span.green {
+    color: lightgreen;
+}
+.movie-Img-desc {
+    color: #eee;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 1rem 1rem;
+    letter-spacing: 0.5px;
+}
+.descr h3{
+    margin:3rem;
+}
+.buttonDelete {
+    background-color: red;
+    border: none;
+    color: white;
+    padding: 10px 40px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 40px 2px;
+    cursor: pointer;
+    font-weight: bold;
+}

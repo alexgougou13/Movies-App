@@ -1,0 +1,74 @@
+﻿@page "/MovieDetails"
+@using Microsoft.AspNetCore.WebUtilities;
+@using Microsoft.Extensions.Primitives;
+@using Movies_App.Models;
+@using Movies_App.MoviesData;
+@inject NavigationManager navManager
+
+<style>
+    body {
+        background-color: #22254b;
+    }
+</style>
+<body>
+    <header>@movie.Title</header>
+    <main id="main">
+        <div class="movie">
+
+                <!-- Making director and release date Unknown if not given -->
+
+            <div class="movie-Img-desc">
+                <img style="vertical-align:middle" src="@movie.ImageUrl" alt="Image" />
+                <div class="descr">
+                    <h3>@movie.Description</h3>
+                    @if (!string.IsNullOrEmpty(@movie.Director) && !string.IsNullOrWhiteSpace(@movie.Director))
+                    {
+                        <h3>Directed By: @movie.Director</h3>
+                    }
+                    else
+                    {
+                        <h3>Directed By: Unknown</h3>
+                    }
+                    @if (@movie.ReleaseDate.Date.ToString("yyyy") != "0001")
+                    {
+                        <h3>Released : @movie.ReleaseDate.Date.ToString("dd-MMMM-yyyy")</h3>
+                    }
+                    else
+                    {
+                        <h3>Released : Unknown</h3>
+                    }
+                </div>
+            </div>
+
+            <div class="movie-info">
+                <h3>@movie.Title</h3>
+                <span class="green">@movie.Rating</span>
+            </div>
+
+        </div>
+    </main>
+</body>
+<!-- calling MovieDelet when deleteButton is pressed -->
+<button class="buttonDelete" @onclick="@(async () => await MovieDelete(movieId))">Delete Movie</button>
+@code {
+    private Guid movieId;
+    Movie movie = new Movie();
+    protected override async Task OnInitializedAsync()
+    {
+        //getting the id of the movie
+
+        StringValues IdOfMovie;
+        var uri = navManager.ToAbsoluteUri(navManager.Uri);
+        if (QueryHelpers.ParseQuery(uri.Query).TryGetValue("id", out IdOfMovie))
+        {
+            movieId = Guid.Parse(IdOfMovie);
+        }
+        movie = await MoviesData.GetMovie(movieId);
+
+    }
+    async Task MovieDelete(Guid movieId)
+    {
+        await MoviesData.DeleteMovie(movieId);
+        navManager.NavigateTo("/");
+    }
+}

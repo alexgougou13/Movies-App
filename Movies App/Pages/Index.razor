@@ -1,0 +1,39 @@
+﻿@page "/"
+@using Movies_App.Models;
+@using Movies_App.MoviesData;
+
+<style>
+    body {
+        background-color: #22254b;
+    }
+</style>
+<head>
+    <title>Movie App</title>
+</head>
+<body>
+    <main id="main">
+        @foreach (var movie in movies)
+        {
+        <div class="movie">
+            <img src="@movie.ImageUrl" alt="Image" />
+
+            <!-- When Title is pressed user gets redirected to movie details and we take the id of the movie -->
+            <div class="movie-info">
+                <h3><a href="/MovieDetails?id=@movie.Id">@movie.Title</a></h3>
+                <span class="green">@movie.Rating</span>
+            </div>
+
+
+        </div>
+        }
+    </main>
+</body>
+@code{
+    //creating a list of movies calling an API to get them and list them 
+    List<Movie> movies = new List<Movie>();
+    protected override async Task OnInitializedAsync()
+    {
+        var mov = await MoviesData.GetMovies();
+        movies = mov.ToList();
+    }
+}

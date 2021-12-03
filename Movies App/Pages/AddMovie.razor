@@ -1,0 +1,159 @@
+﻿@page "/addmovie"
+@using Movies_App.Models;
+@using Movies_App.MoviesData;
+@inject NavigationManager navManager
+<style>
+    body {
+        background-color: #22254b;
+
+    }
+    .col-form-label {
+        color: wheat;
+    }
+    .col-md-8.text-center {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 100px;
+    }
+    .col-sm{
+        margin-top:200px
+    }
+    .ButtonAdd {
+        text-align: center;
+        text-decoration: none;
+        font-family: sans-serif;
+        -webkit-font-smoothing: antialiased;
+        font-size: 150%;
+        color: #FFF;
+        background: #4E1F5A;
+        padding: 20px 60px;
+        display: inline-block;
+        white-space: nowrap;
+        -webkit-border-radius: 5px;
+        -moz-border-radius: 5px;
+        border-radius: 5px;
+        margin: 10px 0;
+        -webkit-transition: all 0.2s ease-in-out;
+        -moz-transition: all 0.2s ease-in-out;
+        -o-transition: all 0.2s ease-in-out;
+        transition: all 0.2s ease-in-out;
+        border-radius: 15px;
+
+    }
+    .ButtonAdd:hover {
+        background: #2D0E4F;
+    }
+</style>
+<div class="container">
+    <div class="row">
+        <div class="col-sm">
+
+            <form>
+
+
+
+                <div class="form-group row">
+                    <label for="colFormLabel" class="col-sm-4 col-form-label" >TITLE :</label>
+                    <div class="col-sm-5">
+                        <input type="text" class="form-control" @bind="@title" id="colFormLabel" placeholder="Title Required" required minlength="1">
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="colFormLabel" class="col-sm-4 col-form-label">DIRECTOR :</label>
+                    <div class="col-sm-5">
+                        <input type="text" class="form-control" @bind="@director" id="colFormLabel">
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="colFormLabel" class="col-sm-4 col-form-label">DESCRIPTION :</label>
+                    <div class="col-sm-5">
+                        <input type="text" class="form-control" @bind="@description" id="colFormLabel">
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="colFormLabel" class="col-sm-4 col-form-label">IMAGE URL :</label>
+                    <div class="col-sm-5">
+                        <input type="text" class="form-control" @bind="@imageUrl" id="colFormLabel">
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-sm-4 col-form-label" >RELEASE DATE :</label>
+                    <div class="col-sm-5">
+                        <input type="date" class="form-control" id="colFormLabel"  @bind="@relDate">
+                    </div>
+                </div>
+
+
+
+                <div class="form-group row">
+                    <label for="colFormLabel" class="col-sm-4 col-form-label">RATING :</label>
+                    <div class="col-sm-5">
+                        <input type="text" class="form-control" @bind="@rating" placeholder="Any number from 0 to 10 (not required)" id="colFormLabel">
+                    </div>
+                </div>
+
+                <div class="col-md-8 text-center">
+                    <button class="ButtonAdd" @onclick="@(async () => await MovieAdd())">ADD MOVIE!</button>
+                </div>
+
+            </form>
+
+        </div>
+
+
+    </div>
+</div>
+
+
+@code {
+    private string title { get; set; }
+    private string director { get; set; }
+    private string description { get; set; }
+    private string imageUrl { get; set; }
+    private string rating { get; set; }
+    private DateTime relDate { get; set; } = DateTime.Today.Date;
+    Movie movie = new Movie();
+    async Task MovieAdd()
+    {
+        if (title == null)
+        {
+            return;
+        }
+        double rat = 0;
+        //For Greek region needs '.' to convert string to number if number is float
+        if (!string.IsNullOrEmpty(rating)&&!string.IsNullOrWhiteSpace(rating))
+        {
+            double.TryParse(rating.Replace(",", "."), out rat);
+        }
+        if ((rat<0||rat>10) && !string.IsNullOrEmpty(rating))
+        {
+            return;
+        }
+        movie.Id = Guid.NewGuid();
+        movie.Title = title;
+        movie.Description = description;
+        //if no image is given in input we add a placeholder image
+        if (imageUrl==null)
+        {
+            imageUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/1665px-No-Image-Placeholder.svg.png";
+        }
+        movie.ImageUrl = imageUrl;
+        //checking for not given input
+        if (relDate!=DateTime.Today.Date)
+        {
+            movie.ReleaseDate = relDate;
+        }
+        movie.Director = director;
+        if (!string.IsNullOrEmpty(rating))
+        {
+            movie.Rating = rat;
+        }
+        await MoviesData.AddaMovie(movie);
+        navManager.NavigateTo("/");
+    }
+}

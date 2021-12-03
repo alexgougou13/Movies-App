@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Movies_App.MoviesData
@@ -29,6 +30,7 @@ namespace Movies_App.MoviesData
                 return DeserList;
             }
         }
+
         //method of getting a single movie
         public static async Task<Movie> GetMovie(Guid id)
         {
@@ -64,13 +66,13 @@ namespace Movies_App.MoviesData
         //method for adding a movie
         public static async Task AddaMovie(Movie movie)
         {
-            string movieParam = movie.ToString();
+            string json = await (Task.Run(()=> JsonConvert.SerializeObject(movie)));
             var client = new HttpClient();
             var request = new HttpRequestMessage
             {
                 Method = HttpMethod.Post,
                 RequestUri = new Uri("http://localhost:34925/api/movies/"),
-                Content = new StringContent($"{{\n\t\"Title\":\"{movie.Title}\",\n\t\"Description\":\"{movie.Description}\",\n\t\"Director\":\"{movie.Director}\",\n\t\"Rating\":{movie.Rating},\n\t\"ReleaseDate\":\"{movie.ReleaseDate}\",\n\t\"ImageUrl\":\"{movie.ImageUrl}\"\n}}")
+                Content = new StringContent(json)
                 {
                     Headers =
                     {               
